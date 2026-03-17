@@ -6,6 +6,7 @@ export interface Exercise {
   notes: string;
   restSeconds: number;
   superset?: string;
+  videoUrl?: string;
 }
 
 export interface WorkoutDay {

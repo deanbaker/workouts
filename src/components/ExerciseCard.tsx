@@ -19,7 +19,20 @@ export function ExerciseCard({ exercise, exerciseLog, onUpdateSet, onSetComplete
           {exercise.superset && (
             <span className="exercise-card__superset">{exercise.superset}{exerciseLog.exerciseId === exercise.id ? '' : ''}</span>
           )}
-          <h3 className="exercise-card__name">{exercise.name}</h3>
+          <h3 className="exercise-card__name">
+            {exercise.name}
+            {exercise.videoUrl && (
+              <a
+                href={exercise.videoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="exercise-card__video-link"
+                onClick={(e) => e.stopPropagation()}
+              >
+                &#9654;
+              </a>
+            )}
+          </h3>
         </div>
         <span className="exercise-card__target">
           {exercise.sets} x {exercise.reps}

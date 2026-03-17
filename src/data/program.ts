@@ -18,6 +18,7 @@ export const dayA: WorkoutDay = {
       notes: 'Main strength lift. Easier on the lower back than conventional. RPE 7-8.',
       restSeconds: 150,
       superset: 'A',
+      videoUrl: 'https://www.youtube.com/watch?v=-bSCG8ARHSk',
     },
     {
       id: 'pallof-press',
@@ -27,6 +28,7 @@ export const dayA: WorkoutDay = {
       notes: 'Anti-rotation core — directly transfers to guard retention and framing.',
       restSeconds: 75,
       superset: 'A',
+      videoUrl: 'https://www.youtube.com/watch?v=aGceOEesl2M',
     },
     {
       id: 'bulgarian-split-squat',
@@ -36,6 +38,7 @@ export const dayA: WorkoutDay = {
       notes: 'Single-leg strength for passing, shooting, and knee stability. Hold dumbbells.',
       restSeconds: 150,
       superset: 'B',
+      videoUrl: 'https://www.youtube.com/watch?v=uqI3GVwfToU',
     },
     {
       id: 'chest-supported-row',
@@ -45,6 +48,7 @@ export const dayA: WorkoutDay = {
       notes: 'Pulling volume without lower back fatigue. Builds upper back for grips and posture.',
       restSeconds: 75,
       superset: 'B',
+      videoUrl: 'https://www.youtube.com/watch?v=oKNjFM1bxAs',
     },
     {
       id: 'nordic-curl',
@@ -54,6 +58,7 @@ export const dayA: WorkoutDay = {
       notes: 'Eccentric hamstring strength — major injury prevention for knees and hamstrings.',
       restSeconds: 150,
       superset: 'C',
+      videoUrl: 'https://www.youtube.com/watch?v=rzK7glg8OnA',
     },
     {
       id: 'face-pulls',
@@ -63,6 +68,7 @@ export const dayA: WorkoutDay = {
       notes: 'Rear delt and external rotation health. Non-negotiable for BJJ shoulders.',
       restSeconds: 75,
       superset: 'C',
+      videoUrl: 'https://www.youtube.com/watch?v=7ZvpXA_mFpQ',
     },
     {
       id: 'farmers-carry',
@@ -71,6 +77,7 @@ export const dayA: WorkoutDay = {
       reps: '30-40m',
       notes: 'Grip endurance, core stability, shoulder packing. Heavy as possible with good posture.',
       restSeconds: 120,
+      videoUrl: 'https://www.youtube.com/watch?v=j8c9uNjr7nQ',
     },
   ],
   cooldown: [
@@ -97,6 +104,7 @@ export const dayB: WorkoutDay = {
       notes: 'Main upper body pull. Use a neutral grip to save the elbows. Add weight when bodyweight feels easy.',
       restSeconds: 150,
       superset: 'A',
+      videoUrl: 'https://www.youtube.com/watch?v=y90HR4gRvyg',
     },
     {
       id: 'db-bench-press',
@@ -106,6 +114,7 @@ export const dayB: WorkoutDay = {
       notes: 'Pressing strength for framing and posting. Dumbbells are more shoulder-friendly than barbell.',
       restSeconds: 150,
       superset: 'A',
+      videoUrl: 'https://www.youtube.com/watch?v=dGqI0Z5ul4k',
     },
     {
       id: 'single-arm-row',
@@ -115,6 +124,7 @@ export const dayB: WorkoutDay = {
       notes: 'Unilateral pulling — mimics collar/sleeve grips and arm drags.',
       restSeconds: 75,
       superset: 'B',
+      videoUrl: 'https://www.youtube.com/watch?v=YZgVEy6cmaY',
     },
     {
       id: 'landmine-press',
@@ -124,6 +134,7 @@ export const dayB: WorkoutDay = {
       notes: 'Shoulder-friendly pressing with a rotational element. Great for BJJ.',
       restSeconds: 75,
       superset: 'B',
+      videoUrl: 'https://www.youtube.com/watch?v=t7fVETRRuAs',
     },
     {
       id: 'cable-woodchop',
@@ -133,6 +144,7 @@ export const dayB: WorkoutDay = {
       notes: 'Rotational power for sweeps, hip escapes, and scrambles.',
       restSeconds: 75,
       superset: 'C',
+      videoUrl: 'https://www.youtube.com/watch?v=avweSt-TARk',
     },
     {
       id: 'ytw-raises',
@@ -142,6 +154,7 @@ export const dayB: WorkoutDay = {
       notes: 'Scapular stability and shoulder health. Light weight, slow and controlled.',
       restSeconds: 75,
       superset: 'C',
+      videoUrl: 'https://www.youtube.com/watch?v=tM4jbUeBNpg',
     },
     {
       id: 'dead-hang-shrug',
@@ -150,6 +163,7 @@ export const dayB: WorkoutDay = {
       reps: '20-30s',
       notes: 'Grip endurance, shoulder decompression, lat engagement. Great after a BJJ week.',
       restSeconds: 90,
+      videoUrl: 'https://www.youtube.com/watch?v=-ZIpSoTRsuE',
     },
   ],
   cooldown: [

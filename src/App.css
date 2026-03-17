@@ -249,6 +249,21 @@ body {
   font-size: 16px;
   font-weight: 600;
   color: var(--text-bright);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.exercise-card__video-link {
+  color: var(--accent);
+  font-size: 12px;
+  text-decoration: none;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.exercise-card__video-link:active {
+  opacity: 1;
 }
 
 .exercise-card__target {
