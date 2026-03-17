@@ -1,14 +1,17 @@
 import { Exercise, ExerciseLog, SetLog } from '../types';
 import { SetLogger } from './SetLogger';
+import { WeightUnit } from '../hooks/useWeightUnit';
 
 interface Props {
   exercise: Exercise;
   exerciseLog: ExerciseLog;
+  unit: WeightUnit;
+  isPR?: boolean;
   onUpdateSet: (exerciseId: string, setIndex: number, setLog: SetLog) => void;
   onSetComplete: (restSeconds: number) => void;
 }
 
-export function ExerciseCard({ exercise, exerciseLog, onUpdateSet, onSetComplete }: Props) {
+export function ExerciseCard({ exercise, exerciseLog, unit, isPR, onUpdateSet, onSetComplete }: Props) {
   const completedSets = exerciseLog.sets.filter(s => s.completed).length;
   const allDone = completedSets === exercise.sets;
 
@@ -17,7 +20,7 @@ export function ExerciseCard({ exercise, exerciseLog, onUpdateSet, onSetComplete
       <div className="exercise-card__header">
         <div className="exercise-card__title-row">
           {exercise.superset && (
-            <span className="exercise-card__superset">{exercise.superset}{exerciseLog.exerciseId === exercise.id ? '' : ''}</span>
+            <span className="exercise-card__superset">{exercise.superset}</span>
           )}
           <h3 className="exercise-card__name">
             {exercise.name}
@@ -43,12 +46,17 @@ export function ExerciseCard({ exercise, exerciseLog, onUpdateSet, onSetComplete
         <p className="exercise-card__notes">{exercise.notes}</p>
       )}
 
+      {isPR && (
+        <div className="exercise-card__pr-badge">New PR!</div>
+      )}
+
       <div className="exercise-card__sets">
         {exerciseLog.sets.map((setLog, i) => (
           <SetLogger
             key={i}
             setIndex={i}
             log={setLog}
+            unit={unit}
             onChange={(updated) => onUpdateSet(exercise.id, i, updated)}
             onComplete={() => onSetComplete(exercise.restSeconds)}
           />

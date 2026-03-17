@@ -5,15 +5,39 @@ interface Props {
   onDismiss: () => void;
 }
 
+function playBeep() {
+  try {
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = 880;
+    osc.type = 'sine';
+    gain.gain.value = 0.3;
+    osc.start();
+    // Three short beeps
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.setValueAtTime(0, ctx.currentTime + 0.15);
+    gain.gain.setValueAtTime(0.3, ctx.currentTime + 0.25);
+    gain.gain.setValueAtTime(0, ctx.currentTime + 0.4);
+    gain.gain.setValueAtTime(0.3, ctx.currentTime + 0.5);
+    gain.gain.setValueAtTime(0, ctx.currentTime + 0.65);
+    osc.stop(ctx.currentTime + 0.7);
+  } catch {
+    // Silent fail
+  }
+}
+
 export function RestTimer({ seconds, onDismiss }: Props) {
   const [remaining, setRemaining] = useState(seconds);
   const [isRunning, setIsRunning] = useState(true);
-  const hasVibrated = useRef(false);
+  const hasNotified = useRef(false);
 
   useEffect(() => {
     setRemaining(seconds);
     setIsRunning(true);
-    hasVibrated.current = false;
+    hasNotified.current = false;
   }, [seconds]);
 
   useEffect(() => {
@@ -23,9 +47,12 @@ export function RestTimer({ seconds, onDismiss }: Props) {
       setRemaining(r => {
         if (r <= 1) {
           setIsRunning(false);
-          if (!hasVibrated.current && navigator.vibrate) {
-            navigator.vibrate([200, 100, 200, 100, 200]);
-            hasVibrated.current = true;
+          if (!hasNotified.current) {
+            if (navigator.vibrate) {
+              navigator.vibrate([200, 100, 200, 100, 200]);
+            }
+            playBeep();
+            hasNotified.current = true;
           }
           return 0;
         }

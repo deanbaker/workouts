@@ -10,7 +10,7 @@ export interface Exercise {
 }
 
 export interface WorkoutDay {
-  id: 'day-a' | 'day-b';
+  id: string;
   name: string;
   warmup: string[];
   exercises: Exercise[];
@@ -30,9 +30,10 @@ export interface ExerciseLog {
 
 export interface WorkoutLog {
   id: string;
-  dayId: 'day-a' | 'day-b';
+  dayId: string;
   date: string;
   exercises: ExerciseLog[];
   duration?: number;
   startTime?: string;
+  notes?: string;
 }

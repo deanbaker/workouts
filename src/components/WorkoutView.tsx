@@ -3,16 +3,23 @@ import { WorkoutDay, ExerciseLog, SetLog, WorkoutLog } from '../types';
 import { ExerciseCard } from './ExerciseCard';
 import { RestTimer } from './RestTimer';
 import { WarmupCooldown } from './WarmupCooldown';
-import { getLastExerciseLog, saveWorkoutLog, generateId } from '../utils/storage';
+import { getLastExerciseLog, saveWorkoutLog, generateId, getExercisePR } from '../utils/storage';
+import { useWakeLock } from '../hooks/useWakeLock';
+import { WeightUnit } from '../hooks/useWeightUnit';
 
 interface Props {
   day: WorkoutDay;
+  unit: WeightUnit;
   onBack: () => void;
+  onFinish: (log: WorkoutLog) => void;
 }
 
-export function WorkoutView({ day, onBack }: Props) {
+export function WorkoutView({ day, unit, onBack, onFinish }: Props) {
+  useWakeLock();
+
   const workoutIdRef = useRef(generateId());
   const startTimeRef = useRef(new Date().toISOString());
+  const exerciseRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
   const [exerciseLogs, setExerciseLogs] = useState<ExerciseLog[]>(() => {
     return day.exercises.map(exercise => {
@@ -27,6 +34,7 @@ export function WorkoutView({ day, onBack }: Props) {
   });
 
   const [restTimer, setRestTimer] = useState<{ seconds: number; key: number } | null>(null);
+  const [newPR, setNewPR] = useState<string | null>(null);
 
   // Auto-save on every change
   useEffect(() => {
@@ -48,15 +56,56 @@ export function WorkoutView({ day, onBack }: Props) {
           : el
       )
     );
+
+    // Check for PR when completing a set
+    if (setLog.completed && setLog.weight > 0) {
+      const currentPR = getExercisePR(exerciseId);
+      if (!currentPR || setLog.weight > currentPR.weight || (setLog.weight === currentPR.weight && setLog.reps > currentPR.reps)) {
+        setNewPR(exerciseId);
+        setTimeout(() => setNewPR(null), 3000);
+      }
+    }
   }, []);
 
-  const handleSetComplete = useCallback((restSeconds: number) => {
+  const handleSetComplete = useCallback((restSeconds: number, exerciseId: string) => {
     setRestTimer({ seconds: restSeconds, key: Date.now() });
-  }, []);
+
+    // Superset auto-advance: scroll to the next superset partner
+    const exerciseIndex = day.exercises.findIndex(e => e.id === exerciseId);
+    const exercise = day.exercises[exerciseIndex];
+    if (exercise?.superset) {
+      // Find the next exercise in the same superset group
+      const nextInGroup = day.exercises.find(
+        (e, i) => i > exerciseIndex && e.superset === exercise.superset
+      );
+      // Or wrap to the first in the group
+      const target = nextInGroup ?? day.exercises.find(
+        (e, i) => i < exerciseIndex && e.superset === exercise.superset
+      );
+      if (target && target.id !== exerciseId) {
+        setTimeout(() => {
+          exerciseRefs.current.get(target.id)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 300);
+      }
+    }
+  }, [day.exercises]);
 
   const dismissTimer = useCallback(() => {
     setRestTimer(null);
   }, []);
+
+  const handleFinish = () => {
+    const now = new Date().toISOString();
+    const log: WorkoutLog = {
+      id: workoutIdRef.current,
+      dayId: day.id,
+      date: now,
+      exercises: exerciseLogs,
+      startTime: startTimeRef.current,
+    };
+    saveWorkoutLog(log);
+    onFinish(log);
+  };
 
   const totalSets = day.exercises.reduce((sum, e) => sum + e.sets, 0);
   const completedSets = exerciseLogs.reduce(
@@ -111,13 +160,22 @@ export function WorkoutView({ day, onBack }: Props) {
             {exercises.map(exercise => {
               const log = exerciseLogs.find(el => el.exerciseId === exercise.id)!;
               return (
-                <ExerciseCard
+                <div
                   key={exercise.id}
-                  exercise={exercise}
-                  exerciseLog={log}
-                  onUpdateSet={handleUpdateSet}
-                  onSetComplete={handleSetComplete}
-                />
+                  ref={el => {
+                    if (el) exerciseRefs.current.set(exercise.id, el);
+                    else exerciseRefs.current.delete(exercise.id);
+                  }}
+                >
+                  <ExerciseCard
+                    exercise={exercise}
+                    exerciseLog={log}
+                    unit={unit}
+                    isPR={newPR === exercise.id}
+                    onUpdateSet={handleUpdateSet}
+                    onSetComplete={(restSeconds) => handleSetComplete(restSeconds, exercise.id)}
+                  />
+                </div>
               );
             })}
           </div>
@@ -125,6 +183,10 @@ export function WorkoutView({ day, onBack }: Props) {
       </div>
 
       <WarmupCooldown title="Cooldown" items={day.cooldown} />
+
+      <button className="workout-view__finish-btn" onClick={handleFinish}>
+        Finish Workout
+      </button>
 
       {restTimer && (
         <RestTimer
